@@ -5,7 +5,10 @@ export const AuthContext = createContext({});
 
 function AuthContextProvider({children}) {
 
-    const [isAuthenticated, toggleIsAuthenticated] = useState(false);
+    const [isAuthenticated, toggleIsAuthenticated] = useState({
+        isAuthenticated: false,
+        user: null
+    });
     const history = useHistory();
     const contextData = {
         isAuthenticated: isAuthenticated,

@@ -10,7 +10,7 @@ function SignIn() {
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab alias cum debitis dolor dolore fuga id molestias qui quo unde?</p>
 
       <form>
-        <p>*invoervelden*</p>
+          <p>//hier komt je form</p>
         <button onClick={login}>Inloggen</button>
       </form>
 

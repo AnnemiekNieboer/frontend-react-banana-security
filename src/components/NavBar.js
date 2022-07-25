@@ -21,8 +21,6 @@ function NavBar() {
             </Link>
 
             {isAuthenticated ?
-                <button onClick={logout}>log uit</button>
-                :
                 <div>
                     <button
                         type="button"
@@ -37,6 +35,9 @@ function NavBar() {
                         Registreren
                     </button>
                 </div>
+                :
+                <button onClick={logout}>log uit</button>
+
             }
         </nav>
     );
