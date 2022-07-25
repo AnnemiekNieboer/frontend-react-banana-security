@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState,} from "react";
+import React, {createContext, useContext, useEffect, useState,} from "react";
 import {useHistory} from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
@@ -9,17 +9,41 @@ function AuthContextProvider({children}) {
 
     const [isAuthenticated, toggleIsAuthenticated] = useState({
         isAuthenticated: false,
-        user: null
+        user: null,
+        status: 'pending',
     });
     const history = useHistory();
+
     const contextData = {
-        isAuthenticated: isAuthenticated,
+        isAuthenticated: isAuthenticated.isAuthenticated,
+        user: isAuthenticated.user,
         login: login,
         logout: logout,
     }
 
+    useEffect(() => {
+        console.log('Context wordt gerefresht')
+        const token = localStorage.getItem('token');
+        console.log(token);
+        if (token) {
+            const decodedToken = jwt_decode(token);
+            getUserData(decodedToken.sub, token);
+            toggleIsAuthenticated({
+                status: 'done',
+            })
+        } else{
+            toggleIsAuthenticated({
+                isAuthenticated: false,
+                user: null,
+                status: 'done',
+            })
+        }
+    }, [])
+
     function login(token) {
-        toggleIsAuthenticated(true);
+        toggleIsAuthenticated({
+            isAuthenticated: true,
+        });
         console.log(token);
         localStorage.setItem('token', token);
         const decodedToken = jwt_decode(token);
@@ -30,7 +54,12 @@ function AuthContextProvider({children}) {
     }
 
     function logout() {
-        toggleIsAuthenticated(false);
+        localStorage.clear();
+        toggleIsAuthenticated({
+            isAuthenticated: false,
+            user: null,
+            status: 'done',
+        });
         console.log("De gebruiker is uitgelogd");
         history.push("/");
     }
@@ -45,12 +74,14 @@ function AuthContextProvider({children}) {
                 });
             console.log(response);
             toggleIsAuthenticated({
+                ...isAuthenticated,
                 isAuthenticated: true,
                 user: {
                     username: response.data.username,
                     email: response.data.email,
                     id: response.data.id,
-                }
+                },
+                status: 'done',
             })
             history.push('/profile');
         } catch (e) {
@@ -60,7 +91,7 @@ function AuthContextProvider({children}) {
 
     return (
         <AuthContext.Provider value={contextData}>
-            {children}
+            {isAuthenticated.status === 'done' ? children : <p>loading...</p>}
         </AuthContext.Provider>
     )
 }
