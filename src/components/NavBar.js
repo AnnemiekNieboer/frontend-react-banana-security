@@ -21,22 +21,22 @@ function NavBar() {
             </Link>
 
             {isAuthenticated ?
-                <div>
-                    <button
-                        type="button"
-                        onClick={() => history.push('/signin')}
-                    >
-                        Log in
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => history.push('/signup')}
-                    >
-                        Registreren
-                    </button>
-                </div>
-                :
                 <button onClick={logout}>log uit</button>
+                :
+                <div>
+                <button
+                type="button"
+                onClick={() => history.push('/signin')}
+                >
+                Log in
+                </button>
+                <button
+                type="button"
+                onClick={() => history.push('/signup')}
+                >
+                Registreren
+                </button>
+                </div>
 
             }
         </nav>
